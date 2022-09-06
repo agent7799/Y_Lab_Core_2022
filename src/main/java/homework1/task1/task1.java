@@ -19,7 +19,7 @@ public class task1 {
         System.out.println("Minimal value: " + getMin(array));
         System.out.println("Average value: " + getAverage(array));
 
-        assert  getAverage(testArray) == 52.11 : "test 1: average incorrect" ;
+        assert  getAverage(testArray) == 51.11 : "test 1: average incorrect, expected value: 52.11" ;
         assert getMin(array) >= 0;
 
     }

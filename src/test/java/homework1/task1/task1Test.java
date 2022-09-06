@@ -27,4 +27,5 @@ class task1Test {
     assertEquals(77, task1.getMax(testArray));
 }
 
+
 }
