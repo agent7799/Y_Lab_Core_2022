@@ -1,8 +1,6 @@
 package homework;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class ComplexExamples {
 
@@ -101,95 +99,125 @@ public class ComplexExamples {
 
         task1Solution(RAW_DATA);
 
+        /*
+        TODO
+        //task1SolutionVar2(RAW_DATA);
+        */
+
+        task2Solution(new int[]{3, 4, 2, 7}, 10);
+
+
+        System.out.println(fuzzySearch("car", "ca6$$#_rtwheel")); // true
+        System.out.println(fuzzySearch("cwhl", "cartwheel")); // true
+        System.out.println(fuzzySearch("cwhee", "cartwheel")); // true
+        System.out.println(fuzzySearch("cartwheel", "cartwheel")); // true
+        System.out.println(fuzzySearch("cwheeel", "cartwheel")); // false
+        System.out.println(fuzzySearch("lw", "cartwheel")); // false
     }
 
 
-        /**
-        Task1
-            Убрать дубликаты, отсортировать по идентификатору, сгруппировать по имени
+    /**
+     * Task1
+     * Убрать дубликаты, отсортировать по идентификатору, сгруппировать по имени
+     * <p>
+     * Что должно получиться
+     * Key: Amelia
+     * Value:4
+     * Key: Emily
+     * Value:1
+     * Key: Harry
+     * Value:3
+     * Key: Jack
+     * Value:1
+     */
+    public static void task1Solution(Person[] people) {
+        Map<String, Integer> personMap = new HashMap<>();
 
-            Что должно получиться
-                Key: Amelia
-                Value:4
-                Key: Emily
-                Value:1
-                Key: Harry
-                Value:3
-                Key: Jack
-                Value:1
-         */
-        public static void task1Solution(Person[] people){
-            Map<String, Integer> personMap = new HashMap<>();
+        //filtering duplicates and sort by name
+        List<Person> uniquePersons = Arrays.stream(RAW_DATA)
+                .filter(p -> Objects.nonNull(p.id) && Objects.nonNull(p.name))
+                .distinct()
+                .sorted(Comparator.comparing(Person::getName))
+                .toList();
+        //
+        uniquePersons.forEach(person -> {
+            personMap.put(person.getName(), (int) uniquePersons.stream()
+                    .filter(p -> p.getName().equals(person.getName()))
+                    .count());
+        });
 
-            //filtering duplicates and sort by name
-            List<Person> uniquePersons = Arrays.stream(RAW_DATA)
-                    .filter(p -> Objects.nonNull(p.id) && Objects.nonNull(p.name))
-                    .distinct()
-                    .sorted(Comparator.comparing(Person::getName))
-                    .toList();
-
-//            get Map of names and frequency
-//            for (Person p : uniquePersons) {
-//                personMap.put(p.getName(), (int) uniquePersons
-//                        .stream()
-//                        .filter(person -> person.getName().equals(p.getName()))
-//                        .count());
-//            }
-
-            uniquePersons
-                    .stream()
-                    .forEach(person -> {
-                        personMap.put(person.getName(),
-                                (int) uniquePersons.stream().filter(p -> p.getName().equals(person.getName())).count());
-                            });
-
-            uniquePersons.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-
-
-
-            // printing Map
-            for (Map.Entry<String, Integer> entry : personMap.entrySet()) {
-                System.out.println("Key: " + entry.getKey());
-                System.out.println("Value: " + entry.getValue());
-            };
-
-            System.out.println();
-
-
-
-            System.out.println(uniquePersons.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting())));
-
-            uniquePersons.stream().forEach(person -> {
-                                System.out.println(person.getName());
-                                System.out.println(uniquePersons
-                                        .stream()
-                                        .filter(p -> p.getName().equals(person.getName()))
-                                        .count());
-                            });
-
-
-
+        // printing Map
+        for (Map.Entry<String, Integer> entry : personMap.entrySet()) {
+            System.out.println("Key: " + entry.getKey());
+            System.out.println("Value:" + entry.getValue());
         }
+        System.out.println();
+    }
+
+//    public static void task1SolutionVar2(Person[] people) {
+//        System.out.println("Var 2");
+//
+//        Map<String, Integer> personMap ;
+//                Arrays.stream(RAW_DATA)
+//                .collect(Collectors.toMap(Function.identity(), e -> 1, Math::addExact));
+////                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+//
+//            personMap.forEach(personMap.entrySet() -> {
+//            System.out.println(personMap.);
+//        });
+//}
+
+    /**
+     * Task2
+     * <p>
+     * [3, 4, 2, 7], 10 -> [3, 7] - вывести пару менно в скобках, которые дают сумму - 10
+     */
+    public static void task2Solution(int[] sourceArray, int checkedValue) {
+
+        for (int i = 0; i < sourceArray.length; i++) {
+            for (int j = i + 1; j < sourceArray.length; j++) {
+                if (sourceArray[i] + sourceArray[j] == 10) {
+                    //System.out.println("[" + sourceArray[i] + ", " + sourceArray[j] + "]");
+                    System.out.println(String.format("[%d, %d]\n", sourceArray[i], sourceArray[j]));
+                    return;
+                }
+            }
+        }
+        System.out.println();
+    }
 
 
-        /**
-        Task2
-
-            [3, 4, 2, 7], 10 -> [3, 7] - вывести пару менно в скобках, которые дают сумму - 10
-         */
-
-
-        /**
-        Task3
-            Реализовать функцию нечеткого поиска
-            
-                    fuzzySearch("car", "ca6$$#_rtwheel"); // true
-                    fuzzySearch("cwhl", "cartwheel"); // true
-                    fuzzySearch("cwhee", "cartwheel"); // true
-                    fuzzySearch("cartwheel", "cartwheel"); // true
-                    fuzzySearch("cwheeel", "cartwheel"); // false
-                    fuzzySearch("lw", "cartwheel"); // false
-         */
-
+    /**
+     * Task3
+     * Реализовать функцию нечеткого поиска
+     * <p>
+     * fuzzySearch("car", "ca6$$#_rtwheel"); // true
+     * fuzzySearch("cwhl", "cartwheel"); // true
+     * fuzzySearch("cwhee", "cartwheel"); // true
+     * fuzzySearch("cartwheel", "cartwheel"); // true
+     * fuzzySearch("cwheeel", "cartwheel"); // false
+     * fuzzySearch("lw", "cartwheel"); // false
+     */
+    public static boolean fuzzySearch(String pattern, String input) {
+        char ch;
+        int indexFound = -1;
+        int lastIndexFound = -1;
+        StringBuilder sb = new StringBuilder(input);
+        // System.out.println(sb);
+        for (int i = 0; i < pattern.length(); i++) {
+            ch = pattern.charAt(i);
+            indexFound = sb.toString().indexOf(ch);
+            if (indexFound >= 0) {
+                //System.out.println(ch + " found in \"" + sb + "\" on position " + indexFound + " : lastIndexFound " + lastIndexFound);
+                if (indexFound > lastIndexFound) {
+                    sb = new StringBuilder(sb.substring(indexFound + 1));
+                    lastIndexFound = -1;
+                } else {
+                    return false;
+                }
+            } else return false;
+        }
+        return true;
+    }
 
 }
