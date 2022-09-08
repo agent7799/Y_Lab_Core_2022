@@ -97,15 +97,8 @@ public class ComplexExamples {
         System.out.println("Duplicate filtered, grouped by name, sorted by name and id:");
         System.out.println();
 
-        task1Solution(RAW_DATA);
-
-        /*
-        TODO
-        //task1SolutionVar2(RAW_DATA);
-        */
-
+        task1Solution();
         task2Solution(new int[]{3, 4, 2, 7}, 10);
-
 
         System.out.println(fuzzySearch("car", "ca6$$#_rtwheel")); // true
         System.out.println(fuzzySearch("cwhl", "cartwheel")); // true
@@ -130,23 +123,19 @@ public class ComplexExamples {
      * Key: Jack
      * Value:1
      */
-    public static void task1Solution(Person[] people) {
+    public static void task1Solution() {
         Map<String, Integer> personMap = new HashMap<>();
 
-        //filtering duplicates and sort by name
         List<Person> uniquePersons = Arrays.stream(RAW_DATA)
                 .filter(p -> Objects.nonNull(p.id) && Objects.nonNull(p.name))
                 .distinct()
                 .sorted(Comparator.comparing(Person::getName))
                 .toList();
-        //
-        uniquePersons.forEach(person -> {
-            personMap.put(person.getName(), (int) uniquePersons.stream()
-                    .filter(p -> p.getName().equals(person.getName()))
-                    .count());
-        });
 
-        // printing Map
+        uniquePersons.forEach(person -> personMap.put(person.getName(), (int) uniquePersons.stream()
+                .filter(p -> p.getName().equals(person.getName()))
+                .count()));
+
         for (Map.Entry<String, Integer> entry : personMap.entrySet()) {
             System.out.println("Key: " + entry.getKey());
             System.out.println("Value:" + entry.getValue());
@@ -154,18 +143,6 @@ public class ComplexExamples {
         System.out.println();
     }
 
-//    public static void task1SolutionVar2(Person[] people) {
-//        System.out.println("Var 2");
-//
-//        Map<String, Integer> personMap ;
-//                Arrays.stream(RAW_DATA)
-//                .collect(Collectors.toMap(Function.identity(), e -> 1, Math::addExact));
-////                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-//
-//            personMap.forEach(personMap.entrySet() -> {
-//            System.out.println(personMap.);
-//        });
-//}
 
     /**
      * Task2
@@ -176,7 +153,7 @@ public class ComplexExamples {
 
         for (int i = 0; i < sourceArray.length; i++) {
             for (int j = i + 1; j < sourceArray.length; j++) {
-                if (sourceArray[i] + sourceArray[j] == 10) {
+                if (sourceArray[i] + sourceArray[j] == checkedValue) {
                     //System.out.println("[" + sourceArray[i] + ", " + sourceArray[j] + "]");
                     System.out.println(String.format("[%d, %d]\n", sourceArray[i], sourceArray[j]));
                     return;
@@ -200,21 +177,13 @@ public class ComplexExamples {
      */
     public static boolean fuzzySearch(String pattern, String input) {
         char ch;
-        int indexFound = -1;
-        int lastIndexFound = -1;
+        int indexFound;
         StringBuilder sb = new StringBuilder(input);
-        // System.out.println(sb);
         for (int i = 0; i < pattern.length(); i++) {
             ch = pattern.charAt(i);
             indexFound = sb.toString().indexOf(ch);
             if (indexFound >= 0) {
-                //System.out.println(ch + " found in \"" + sb + "\" on position " + indexFound + " : lastIndexFound " + lastIndexFound);
-                if (indexFound > lastIndexFound) {
                     sb = new StringBuilder(sb.substring(indexFound + 1));
-                    lastIndexFound = -1;
-                } else {
-                    return false;
-                }
             } else return false;
         }
         return true;
