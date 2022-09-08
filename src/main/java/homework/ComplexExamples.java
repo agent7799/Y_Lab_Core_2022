@@ -97,8 +97,11 @@ public class ComplexExamples {
         System.out.println("Duplicate filtered, grouped by name, sorted by name and id:");
         System.out.println();
 
+
         task1Solution();
-        task2Solution(new int[]{3, 4, 2, 7}, 10);
+
+       int[] ints = {3, 4, 2, 7};
+        System.out.println(task2Solution(ints, 10));
 
         System.out.println(fuzzySearch("car", "ca6$$#_rtwheel")); // true
         System.out.println(fuzzySearch("cwhl", "cartwheel")); // true
@@ -149,18 +152,17 @@ public class ComplexExamples {
      * <p>
      * [3, 4, 2, 7], 10 -> [3, 7] - вывести пару менно в скобках, которые дают сумму - 10
      */
-    public static void task2Solution(int[] sourceArray, int checkedValue) {
+    public static String task2Solution(int[] sourceArray, int checkedValue) {
 
         for (int i = 0; i < sourceArray.length; i++) {
             for (int j = i + 1; j < sourceArray.length; j++) {
                 if (sourceArray[i] + sourceArray[j] == checkedValue) {
                     //System.out.println("[" + sourceArray[i] + ", " + sourceArray[j] + "]");
-                    System.out.println(String.format("[%d, %d]\n", sourceArray[i], sourceArray[j]));
-                    return;
+                    return String.format("[%d, %d]\n", sourceArray[i], sourceArray[j]);
                 }
             }
         }
-        System.out.println();
+        return "No matches";
     }
 
 
