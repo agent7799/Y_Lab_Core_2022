@@ -1,8 +1,8 @@
-package homework;
+package homework2;
 
 import org.junit.jupiter.api.Test;
 
-import static homework.ComplexExamples.fuzzySearch;
+import static homework2.ComplexExamples.fuzzySearch;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ComplexExamplesTask3Test {

@@ -1,4 +1,4 @@
-package homework;
+package homework2;
 
 import java.util.*;
 
@@ -109,6 +109,7 @@ public class ComplexExamples {
         System.out.println(fuzzySearch("cartwheel", "cartwheel")); // true
         System.out.println(fuzzySearch("cwheeel", "cartwheel")); // false
         System.out.println(fuzzySearch("lw", "cartwheel")); // false
+        System.out.println(fuzzySearch(null, "cartwheel")); // false
     }
 
 
@@ -154,6 +155,7 @@ public class ComplexExamples {
      */
     public static String task2Solution(int[] sourceArray, int checkedValue) {
 
+
         for (int i = 0; i < sourceArray.length; i++) {
             for (int j = i + 1; j < sourceArray.length; j++) {
                 if (sourceArray[i] + sourceArray[j] == checkedValue) {
@@ -178,15 +180,24 @@ public class ComplexExamples {
      * fuzzySearch("lw", "cartwheel"); // false
      */
     public static boolean fuzzySearch(String pattern, String input) {
-        char ch;
-        int indexFound;
-        StringBuilder sb = new StringBuilder(input);
-        for (int i = 0; i < pattern.length(); i++) {
-            ch = pattern.charAt(i);
-            indexFound = sb.toString().indexOf(ch);
-            if (indexFound >= 0) {
+        try {
+            if (pattern == null || input == null){
+                throw  new NullPointerException();
+            }
+            char ch;
+            int indexFound;
+            StringBuilder sb = new StringBuilder(input);
+            for (int i = 0; i < pattern.length(); i++) {
+                ch = pattern.charAt(i);
+                indexFound = sb.toString().indexOf(ch);
+                if (indexFound >= 0) {
                     sb = new StringBuilder(sb.substring(indexFound + 1));
-            } else return false;
+                } else return false;
+            }
+
+        }catch (NullPointerException e){
+            e.printStackTrace();
+            System.out.println("NullPointerException: wrong input data ");
         }
         return true;
     }
