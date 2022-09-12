@@ -100,6 +100,7 @@ public class ComplexExamples {
         System.out.println();
 
 
+        task1Solution(RAW_DATA);
         task1Solution(null);
 
         int[] ints = {3, 4, 2, 7};
