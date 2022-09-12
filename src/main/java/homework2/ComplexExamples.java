@@ -1,6 +1,7 @@
 package homework2;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ComplexExamples {
 
@@ -48,6 +49,7 @@ public class ComplexExamples {
             new Person(6, "Amelia"),
             new Person(7, "Amelia"),
             new Person(8, "Amelia"),
+            //new Person(9, null),
     };
         /*  Raw data:
 
@@ -98,10 +100,11 @@ public class ComplexExamples {
         System.out.println();
 
 
-        task1Solution();
+        task1Solution(RAW_DATA);
 
-       int[] ints = {3, 4, 2, 7};
+        int[] ints = {3, 4, 2, 7};
         System.out.println(task2Solution(ints, 10));
+        //System.out.println(task2Solution(null, 10));
 
         System.out.println(fuzzySearch("car", "ca6$$#_rtwheel")); // true
         System.out.println(fuzzySearch("cwhl", "cartwheel")); // true
@@ -109,7 +112,7 @@ public class ComplexExamples {
         System.out.println(fuzzySearch("cartwheel", "cartwheel")); // true
         System.out.println(fuzzySearch("cwheeel", "cartwheel")); // false
         System.out.println(fuzzySearch("lw", "cartwheel")); // false
-        System.out.println(fuzzySearch(null, "cartwheel")); // false
+        //System.out.println(fuzzySearch(null, "cartwheel")); // false
     }
 
 
@@ -127,23 +130,22 @@ public class ComplexExamples {
      * Key: Jack
      * Value:1
      */
-    public static void task1Solution() {
-        Map<String, Integer> personMap = new HashMap<>();
+    public static void task1Solution(Person[] persons) {
 
-        List<Person> uniquePersons = Arrays.stream(RAW_DATA)
-                .filter(p -> Objects.nonNull(p.id) && Objects.nonNull(p.name))
+        List<Person> uniquePersons =  Arrays.stream(persons)
+                //check for null and ignore
+                .filter(p -> Objects.nonNull(p.name))
                 .distinct()
-                .sorted(Comparator.comparing(Person::getName))
                 .toList();
 
-        uniquePersons.forEach(person -> personMap.put(person.getName(), (int) uniquePersons.stream()
-                .filter(p -> p.getName().equals(person.getName()))
-                .count()));
+        Map<String, Integer> frequency = uniquePersons.stream()
+                .collect(Collectors.toMap(
+                        e -> e.getName(),
+                        e -> 1,
+                        Integer::sum));
 
-        for (Map.Entry<String, Integer> entry : personMap.entrySet()) {
-            System.out.println("Key: " + entry.getKey());
-            System.out.println("Value:" + entry.getValue());
-        }
+        frequency.forEach((k, v) -> System.out.println("Key: " + k  + "\n" + "Value: " + v));
+
         System.out.println();
     }
 
@@ -154,19 +156,27 @@ public class ComplexExamples {
      * [3, 4, 2, 7], 10 -> [3, 7] - вывести пару менно в скобках, которые дают сумму - 10
      */
     public static String task2Solution(int[] sourceArray, int checkedValue) {
-
-
-        for (int i = 0; i < sourceArray.length; i++) {
-            for (int j = i + 1; j < sourceArray.length; j++) {
-                if (sourceArray[i] + sourceArray[j] == checkedValue) {
-                    //System.out.println("[" + sourceArray[i] + ", " + sourceArray[j] + "]");
-                    return String.format("[%d, %d]\n", sourceArray[i], sourceArray[j]);
+        try {
+            if (sourceArray == null) {
+                throw new NullPointerException();
+            }else{
+                for (int i = 0; i < sourceArray.length; i++) {
+                    for (int j = i + 1; j < sourceArray.length; j++) {
+                        if (sourceArray[i] + sourceArray[j] == checkedValue) {
+                            //System.out.println("[" + sourceArray[i] + ", " + sourceArray[j] + "]");
+                            return String.format("[%d, %d]\n", sourceArray[i], sourceArray[j]);
+                        }
+                    }
                 }
             }
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            System.out.println("task2Solution NullPointerException: wrong input data ");
+        }finally {
+            System.out.println("");
         }
         return "No matches";
     }
-
 
     /**
      * Task3
@@ -181,8 +191,8 @@ public class ComplexExamples {
      */
     public static boolean fuzzySearch(String pattern, String input) {
         try {
-            if (pattern == null || input == null){
-                throw  new NullPointerException();
+            if (pattern == null || input == null) {
+                throw new NullPointerException();
             }
             char ch;
             int indexFound;
@@ -194,12 +204,13 @@ public class ComplexExamples {
                     sb = new StringBuilder(sb.substring(indexFound + 1));
                 } else return false;
             }
-
-        }catch (NullPointerException e){
+            return true;
+        } catch (NullPointerException e) {
             e.printStackTrace();
-            System.out.println("NullPointerException: wrong input data ");
+            System.out.println("fuzzySearch NullPointerException: wrong input data ");
+            return false;
         }
-        return true;
     }
+
 
 }
