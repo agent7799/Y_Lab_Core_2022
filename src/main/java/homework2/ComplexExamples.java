@@ -100,7 +100,7 @@ public class ComplexExamples {
         System.out.println();
 
 
-        task1Solution(RAW_DATA);
+        task1Solution(null);
 
         int[] ints = {3, 4, 2, 7};
         System.out.println(task2Solution(ints, 10));
@@ -132,21 +132,33 @@ public class ComplexExamples {
      */
     public static void task1Solution(Person[] persons) {
 
-        List<Person> uniquePersons =  Arrays.stream(persons)
-                //check for null and ignore
-                .filter(p -> Objects.nonNull(p.name))
-                .distinct()
-                .toList();
+        try {
+            if (persons == null) {
+                throw new NullPointerException();
+            }
 
-        Map<String, Integer> frequency = uniquePersons.stream()
-                .collect(Collectors.toMap(
-                        e -> e.getName(),
-                        e -> 1,
-                        Integer::sum));
+            List<Person> uniquePersons = Arrays.stream(persons)
+                    //check for null and ignore
+                    .filter(p -> Objects.nonNull(p.name))
+                    .distinct()
+                    .toList();
 
-        frequency.forEach((k, v) -> System.out.println("Key: " + k  + "\n" + "Value: " + v));
+//        uniquePersons.forEach(person -> System.out.println(person.getName() + " " + person.getId()));
 
-        System.out.println();
+            Map<String, Integer> frequency = uniquePersons.stream()
+                    .collect(Collectors.toMap(
+                            e -> e.getName(),
+                            e -> 1,
+                            Integer::sum));
+
+            frequency.forEach((k, v) -> System.out.println("Key: " + k + "\n" + "Value: " + v));
+
+            System.out.println();
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            System.out.println("task1Solution NullPointerException: wrong input data ");
+
+        }
     }
 
 
@@ -159,7 +171,7 @@ public class ComplexExamples {
         try {
             if (sourceArray == null) {
                 throw new NullPointerException();
-            }else{
+            } else {
                 for (int i = 0; i < sourceArray.length; i++) {
                     for (int j = i + 1; j < sourceArray.length; j++) {
                         if (sourceArray[i] + sourceArray[j] == checkedValue) {
@@ -172,7 +184,7 @@ public class ComplexExamples {
         } catch (NullPointerException e) {
             e.printStackTrace();
             System.out.println("task2Solution NullPointerException: wrong input data ");
-        }finally {
+        } finally {
             System.out.println("");
         }
         return "No matches";
