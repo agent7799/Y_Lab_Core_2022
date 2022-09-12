@@ -101,7 +101,7 @@ public class ComplexExamples {
 
 
         task1Solution(RAW_DATA);
-        task1Solution(null);
+        //task1Solution(null);
 
         int[] ints = {3, 4, 2, 7};
         System.out.println(task2Solution(ints, 10));
