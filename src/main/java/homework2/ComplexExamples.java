@@ -101,11 +101,13 @@ public class ComplexExamples {
 
 
         task1Solution(RAW_DATA);
-        //task1Solution(null);
+        task1Solution(null);
 
-        int[] ints = {3, 4, 2, 7};
-        System.out.println(task2Solution(ints, 10));
-        //System.out.println(task2Solution(null, 10));
+        System.out.println(task2Solution(new int[]{3, 4, 2, 7}, 10));
+        System.out.println(task2Solution(new int[]{3, 4, 5, 1, 2}, 10));
+        System.out.println(task2Solution(null, 10));
+
+        System.out.println();
 
         System.out.println(fuzzySearch("car", "ca6$$#_rtwheel")); // true
         System.out.println(fuzzySearch("cwhl", "cartwheel")); // true
@@ -113,7 +115,7 @@ public class ComplexExamples {
         System.out.println(fuzzySearch("cartwheel", "cartwheel")); // true
         System.out.println(fuzzySearch("cwheeel", "cartwheel")); // false
         System.out.println(fuzzySearch("lw", "cartwheel")); // false
-        //System.out.println(fuzzySearch(null, "cartwheel")); // false
+        System.out.println(fuzzySearch(null, "cartwheel")); // false
     }
 
 
@@ -132,19 +134,11 @@ public class ComplexExamples {
      * Value:1
      */
     public static void task1Solution(Person[] persons) {
-
-        try {
-            if (persons == null) {
-                throw new NullPointerException();
-            }
-
+            if (persons != null) {
             List<Person> uniquePersons = Arrays.stream(persons)
-                    //check for null and ignore
                     .filter(p -> Objects.nonNull(p.name))
                     .distinct()
                     .toList();
-
-//        uniquePersons.forEach(person -> System.out.println(person.getName() + " " + person.getId()));
 
             Map<String, Integer> frequency = uniquePersons.stream()
                     .collect(Collectors.toMap(
@@ -153,13 +147,11 @@ public class ComplexExamples {
                             Integer::sum));
 
             frequency.forEach((k, v) -> System.out.println("Key: " + k + "\n" + "Value: " + v));
-
             System.out.println();
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            System.out.println("task1Solution NullPointerException: wrong input data ");
-
-        }
+        }else {
+                System.out.println("Error: check input data");
+                System.out.println();
+            }
     }
 
 
@@ -169,26 +161,17 @@ public class ComplexExamples {
      * [3, 4, 2, 7], 10 -> [3, 7] - вывести пару менно в скобках, которые дают сумму - 10
      */
     public static String task2Solution(int[] sourceArray, int checkedValue) {
-        try {
-            if (sourceArray == null) {
-                throw new NullPointerException();
-            } else {
-                for (int i = 0; i < sourceArray.length; i++) {
-                    for (int j = i + 1; j < sourceArray.length; j++) {
-                        if (sourceArray[i] + sourceArray[j] == checkedValue) {
-                            //System.out.println("[" + sourceArray[i] + ", " + sourceArray[j] + "]");
-                            return String.format("[%d, %d]\n", sourceArray[i], sourceArray[j]);
-                        }
+        if (sourceArray != null) {
+            for (int i = 0; i < sourceArray.length; i++) {
+                for (int j = i + 1; j < sourceArray.length; j++) {
+                    if (sourceArray[i] + sourceArray[j] == checkedValue) {
+                        return String.format("[%d, %d]\n", sourceArray[i], sourceArray[j]);
                     }
                 }
-            }
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            System.out.println("task2Solution NullPointerException: wrong input data ");
-        } finally {
-            System.out.println("");
+            }return "No matches";
         }
-        return "No matches";
+        return "Error: check input data";
+
     }
 
     /**
@@ -203,26 +186,21 @@ public class ComplexExamples {
      * fuzzySearch("lw", "cartwheel"); // false
      */
     public static boolean fuzzySearch(String pattern, String input) {
-        try {
-            if (pattern == null || input == null) {
-                throw new NullPointerException();
+            if (pattern != null && input != null) {
+                char ch;
+                int indexFound;
+                StringBuilder sb = new StringBuilder(input);
+                for (int i = 0; i < pattern.length(); i++) {
+                    ch = pattern.charAt(i);
+                    indexFound = sb.toString().indexOf(ch);
+                    if (indexFound >= 0) {
+                        sb = new StringBuilder(sb.substring(indexFound + 1));
+                    } else return false;
+                }
+                return true;
             }
-            char ch;
-            int indexFound;
-            StringBuilder sb = new StringBuilder(input);
-            for (int i = 0; i < pattern.length(); i++) {
-                ch = pattern.charAt(i);
-                indexFound = sb.toString().indexOf(ch);
-                if (indexFound >= 0) {
-                    sb = new StringBuilder(sb.substring(indexFound + 1));
-                } else return false;
-            }
-            return true;
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            System.out.println("fuzzySearch NullPointerException: wrong input data ");
+        System.out.println("Error: check input data");
             return false;
-        }
     }
 
 
